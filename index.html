@@ -1,626 +1,512 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
+<!DOCTYPE html><html lang="zh"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gesture 3D Countdown - 2026 Edition</title>
+    <title>Apple Style Particle System 2026</title>
     <style>
-        /* --- 基础样式 --- */
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #050505; /* 深空黑 */
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: white;
+        :root {
+            --glass-bg: rgba(20, 20, 20, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-gold: #F5E050;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.5);
+            --ease-apple: cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #000000; 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
             user-select: none;
         }
 
-        #canvas-container {
-            width: 100vw;
-            height: 100vh;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
+        #canvas-container { width: 100vw; height: 100vh; position: absolute; z-index: 1; }
+
+        .ui-element {
+            transition: opacity 0.6s var(--ease-apple), transform 0.6s var(--ease-apple);
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* 隐藏视频元素，我们只需要数据 */
-        .input_video {
-            display: none;
-        }
-
-        /* --- UI 容器与玻璃拟态风格 --- */
-        .ui-panel {
-            position: absolute;
-            z-index: 10;
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 16px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        /* --- 顶部状态栏 --- */
-        #status-bar {
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 200px;
-            text-align: center;
+        body.ui-hidden .ui-element {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
         }
         
-        #status-bar.hidden {
-            top: -150px;
+        body.ui-hidden .lil-gui {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transition: opacity 0.6s var(--ease-apple);
         }
 
-        .status-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 4px;
+        #toggle-ui-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
         }
+        #toggle-ui-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.05); }
+        #toggle-ui-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+        #status-panel {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            padding: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            width: 280px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        h1 { margin: 0 0 8px 0; font-size: 20px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.5px; }
+        p { margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
 
         #current-gesture {
+            display: inline-block;
+            margin-top: 12px;
             font-size: 24px;
-            font-weight: 600;
-            background: linear-gradient(135deg, #fff 0%, #a5a5a5 100%);
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #a5a5a5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* --- 切换按钮 --- */
-        #toggle-ui-btn {
+        #video-wrapper {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.3s;
+            bottom: 40px;
+            right: 40px;
+            width: 180px;
+            height: 135px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #111;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 10;
+            transform: scaleX(-1);
+            transition: opacity 0.6s var(--ease-apple), transform 0.6s var(--ease-apple);
         }
-        #toggle-ui-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+        
+        body.ui-hidden #video-wrapper {
+            transform: scaleX(-1) translateY(20px);
         }
 
-        /* --- 加载遮罩 --- */
-        #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s;
+        #input-video { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+
+        #loading {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            pointer-events: none;
         }
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
+            width: 40px; height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
             border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px auto;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* GUI 容器定位 */
-        .lil-gui.root {
-            position: absolute;
-            top: 80px;
-            right: 20px;
-            z-index: 11;
-        }
-        .hidden-gui {
-            display: none !important;
-        }
 
     </style>
-</head>
-<body>
-
-    <div id="loader">
-        <div class="spinner"></div>
-        <p style="margin-top: 20px; color: #888;">Initializing Vision & 3D Engine...</p>
-        <p style="font-size: 12px; color: #555;">请允许摄像头权限</p>
-    </div>
-
-    <button id="toggle-ui-btn" title="Toggle UI">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-    </button>
-
-    <div id="status-bar" class="ui-panel">
-        <div class="status-label">Detected Gesture</div>
-        <div id="current-gesture">Waiting...</div>
-        <div style="font-size: 10px; color: #555; margin-top:5px;">FPS: <span id="fps-counter">0</span></div>
-    </div>
-
-    <video class="input_video" playsinline></video>
-
-    <div id="canvas-container"></div>
-
+    
     <script type="importmap">
         {
             "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
-                "@mediapipe/hands": "https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js",
-                "@mediapipe/camera_utils": "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js",
-                "@mediapipe/drawing_utils": "https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js",
-                "lil-gui": "https://unpkg.com/lil-gui@0.19.1/dist/lil-gui.esm.min.js"
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+                "lil-gui": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/lil-gui.module.min.js"
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <div id="loading">
+        <div class="spinner"></div>
+        <div>初始化神经引擎中...</div>
+    </div>
+
+    <div id="toggle-ui-btn" title="切换UI (按H键)">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path>
+        </svg>
+    </div>
+
+    <div id="status-panel" class="ui-element">
+        <h1>粒子引擎 2026</h1>
+        <p>手势控制已激活</p>
+        <div id="current-gesture">准备就绪</div>
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
+            <p>✊ <strong>握拳</strong> &nbsp; 新年模式</p>
+            <p>🖐 <strong>手掌</strong> &nbsp; 倒计时</p>
+        </div>
+    </div>
+
+    <div id="video-wrapper" class="ui-element">
+        <video id="input-video"></video>
+    </div>
+
+    <div id="canvas-container"></div>
 
     <script type="module">
         import * as THREE from 'three';
-        import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-        import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import GUI from 'lil-gui';
 
-        // --- 全局变量配置 ---
-        const config = {
-            particleCount: 3500,
-            particleSize: 0.18,
-            particleColor: '#ffffff',
-            explosionColor: '#ffcc00',
-            spread: 0.08, // 粒子随机抖动范围
-            lerpSpeed: 0.08, // 变形速度
-            bgColor: '#050505'
+        const toggleBtn = document.getElementById('toggle-ui-btn');
+        const body = document.body;
+        let isUiVisible = true;
+
+        function toggleUI() {
+            isUiVisible = !isUiVisible;
+            if (isUiVisible) {
+                body.classList.remove('ui-hidden');
+                toggleBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>';
+            } else {
+                body.classList.add('ui-hidden');
+                toggleBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>';
+            }
+        }
+
+        toggleBtn.addEventListener('click', toggleUI);
+        window.addEventListener('keydown', (e) => {
+            if(e.key.toLowerCase() === 'h') toggleUI();
+        });
+
+        const CONFIG = {
+            particleCount: 20000,
+            baseSize: 2.0,
+            sizeVariation: 1.8,
+            smoothness: 0.08,
+            scatterRadius: 150,
+            colorTech: '#e0e5ff',
+            colorGold: '#ffcc00',
+            colorRed: '#ff3333',
+            isNewYear: false
         };
 
-        let scene, camera, renderer, particles, geometry;
-        let targetPositions = []; // 目标形状的坐标数组
-        let originalPositions = []; // 粒子当前位置
-        let velocities = []; // 粒子速度（用于爆炸效果）
-        let isExploding = false; // 是否处于爆炸状态
-        let currentText = "";
-        
-        // 字体缓存
-        let loadedFont = null;
-        
-        // 状态管理
-        const state = {
-            gesture: "None",
-            display: "Waiting..."
-        };
+        let scene, camera, renderer, particles;
+        let geometry, material;
+        let targetPositions = [];
+        let currentPositions = [];
+        let velocities = [];
+        let particleExtras = [];
+        let textPixelCount = 0;
+        let lastText = "";
+        let time = 0;
+        const mouse = new THREE.Vector2(9999, 9999);
 
-        // --- 1. Three.js 初始化 ---
-        function initThree() {
+        function init() {
             const container = document.getElementById('canvas-container');
-            
-            // 场景
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(config.bgColor);
-            scene.fog = new THREE.FogExp2(config.bgColor, 0.03);
-
-            // 相机
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 15;
-
-            // 渲染器
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            scene.fog = new THREE.FogExp2(0x000000, 0.008);
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 60);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
-
-            // 光照 (为了让粒子看起来更有体积感)
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-            const pointLight = new THREE.PointLight(0xffffff, 1);
-            pointLight.position.set(10, 10, 10);
-            scene.add(pointLight);
-
-            // 初始化粒子系统
-            initParticles();
-
-            // 监听窗口大小
-            window.addEventListener('resize', onWindowResize);
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.2;
+            controls.enableZoom = false;
+            createParticles();
+            initGUI();
+            updateText("HELLO\n2026");
+            window.addEventListener('resize', onResize);
+            document.addEventListener('mousemove', onMouseMove);
+            animate();
         }
 
-        function initParticles() {
+        function createParticles() {
             geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(config.particleCount * 3);
-            const colors = new Float32Array(config.particleCount * 3);
-            const sizes = new Float32Array(config.particleCount);
-
-            const color = new THREE.Color(config.particleColor);
-
-            for (let i = 0; i < config.particleCount; i++) {
-                // 初始随机分布
-                positions[i * 3] = (Math.random() - 0.5) * 30;
-                positions[i * 3 + 1] = (Math.random() - 0.5) * 30;
-                positions[i * 3 + 2] = (Math.random() - 0.5) * 30;
-
-                // 颜色
-                colors[i * 3] = color.r;
-                colors[i * 3 + 1] = color.g;
-                colors[i * 3 + 2] = color.b;
-
-                // 大小随机化
-                sizes[i] = Math.random();
-
-                // 初始化速度和目标
-                targetPositions.push({x: 0, y: 0, z: 0});
-                velocities.push({x: 0, y: 0, z: 0});
+            const posArray = new Float32Array(CONFIG.particleCount * 3);
+            const colorArray = new Float32Array(CONFIG.particleCount * 3);
+            const sizeArray = new Float32Array(CONFIG.particleCount);
+            const techColor = new THREE.Color(CONFIG.colorTech);
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                const x = (Math.random() - 0.5) * CONFIG.scatterRadius * 2;
+                const y = (Math.random() - 0.5) * CONFIG.scatterRadius * 2;
+                const z = (Math.random() - 0.5) * CONFIG.scatterRadius;
+                posArray[i*3] = x; posArray[i*3+1] = y; posArray[i*3+2] = z;
+                currentPositions.push({x, y, z});
+                targetPositions.push({x, y, z});
+                velocities.push({x:0, y:0, z:0});
+                colorArray[i*3] = techColor.r; colorArray[i*3+1] = techColor.g; colorArray[i*3+2] = techColor.b;
+                const baseS = Math.random();
+                sizeArray[i] = baseS;
+                particleExtras.push({ baseSize: baseS, life: 0, maxLife: 0, isFirework: true, vx: 0, vy: 0, vz: 0 });
             }
-
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-            // ShaderMaterial 用于更圆润漂亮的粒子
-            const material = new THREE.ShaderMaterial({
-                uniforms: {
-                    pointTexture: { value: new THREE.TextureLoader().load( "https://threejs.org/examples/textures/sprites/spark1.png" ) },
-                    baseSize: { value: config.particleSize * 200 } // 缩放因子
-                },
-                vertexShader: `
-                    attribute float size;
-                    varying vec3 vColor;
-                    uniform float baseSize;
-                    void main() {
-                        vColor = color;
-                        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-                        gl_PointSize = baseSize * size * ( 300.0 / -mvPosition.z );
-                        gl_Position = projectionMatrix * mvPosition;
-                    }
-                `,
-                fragmentShader: `
-                    uniform sampler2D pointTexture;
-                    varying vec3 vColor;
-                    void main() {
-                        gl_FragColor = vec4( vColor, 1.0 );
-                        gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
-                        if ( gl_FragColor.a < 0.1 ) discard;
-                    }
-                `,
+            geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizeArray, 1));
+            material = new THREE.PointsMaterial({
+                size: CONFIG.baseSize,
+                map: createSoftGlowTexture(),
+                vertexColors: true,
                 blending: THREE.AdditiveBlending,
-                depthTest: false,
-                transparent: true
+                depthWrite: false,
+                transparent: true,
+                opacity: 0.95,
+                sizeAttenuation: true
             });
-
             particles = new THREE.Points(geometry, material);
             scene.add(particles);
-            
-            // 初始生成 "READY" 字样
-            loadFontAndGenerateText("READY");
         }
 
-        // --- 2. 文本/形状生成逻辑 ---
-        function loadFontAndGenerateText(textString, isExplosionMode = false) {
-            if (currentText === textString && !isExplosionMode) return;
-            currentText = textString;
-            isExploding = isExplosionMode;
-
-            // 恢复颜色 (如果之前是爆炸模式)
-            const colors = geometry.attributes.color.array;
-            const baseColor = new THREE.Color(config.particleColor);
-            
-            if (!isExploding) {
-                for(let i=0; i<config.particleCount; i++) {
-                    colors[i*3] = baseColor.r;
-                    colors[i*3+1] = baseColor.g;
-                    colors[i*3+2] = baseColor.b;
-                }
-                geometry.attributes.color.needsUpdate = true;
-            }
-
-            if (!loadedFont) {
-                const loader = new FontLoader();
-                // 使用 Three.js 示例字体 (无 CORS 问题)
-                loader.load('https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-                    loadedFont = font;
-                    generateTargetPoints(textString);
-                });
-            } else {
-                generateTargetPoints(textString);
-            }
+        function createSoftGlowTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128; canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createRadialGradient(64,64,0,64,64,64);
+            grad.addColorStop(0, 'rgba(255,255,255,1)');
+            grad.addColorStop(0.15, 'rgba(255,255,255,0.9)');
+            grad.addColorStop(0.4, 'rgba(255,255,255,0.2)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad; ctx.fillRect(0,0,128,128);
+            const tex = new THREE.Texture(canvas); tex.needsUpdate = true; return tex;
         }
 
-        function generateTargetPoints(text) {
-            if (!loadedFont) return;
-
-            const textGeo = new TextGeometry(text, {
-                font: loadedFont,
-                size: 3,
-                height: 0.2,
-                curveSegments: 12,
-                bevelEnabled: false
-            });
-
-            textGeo.center();
-            
-            // 从几何体中采样点
-            // 我们不直接使用顶点，因为顶点数量可能不够或分布不均
-            // 这里使用简单的体积采样或表面采样模拟
-            
-            // 简化方案：如果粒子多于顶点，随机分布在顶点周围
-            // 为了更好的效果，我们使用 Raycaster 或简单的顶点映射
-            // 这里为了性能和单文件简洁性，直接映射顶点，不够的循环映射
-            
-            const positions = textGeo.attributes.position.array;
-            const ptCount = positions.length / 3;
-
-            for (let i = 0; i < config.particleCount; i++) {
-                const index = i % ptCount;
-                targetPositions[i] = {
-                    x: positions[index * 3],
-                    y: positions[index * 3 + 1],
-                    z: positions[index * 3 + 2]
-                };
-
-                // 在爆炸模式下，给粒子一个随机的爆发速度
-                if (isExploding) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const speed = 0.2 + Math.random() * 0.5;
-                    velocities[i] = {
-                        x: (Math.random() - 0.5) * speed * 2,
-                        y: (Math.random() - 0.5) * speed * 2 + 0.5, // 向上趋势
-                        z: (Math.random() - 0.5) * speed * 2
-                    };
-                    
-                    // 爆炸颜色
-                    const expColor = new THREE.Color().setHSL(Math.random(), 1.0, 0.6);
-                    const colors = geometry.attributes.color.array;
-                    colors[i*3] = expColor.r;
-                    colors[i*3+1] = expColor.g;
-                    colors[i*3+2] = expColor.b;
+        function updateText(text) {
+            if (text === lastText) return;
+            lastText = text;
+            CONFIG.isNewYear = text.includes("NEW YEAR") || text.includes("新年快乐");
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const width = 300, height = 150;
+            canvas.width = width; canvas.height = height;
+            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, width, height);
+            let fontSize;
+            if (text.includes("新年快乐")) fontSize = 45; 
+            else if (text.length > 5) fontSize = 40;
+            else fontSize = 100;
+            ctx.font = `900 ${fontSize}px -apple-system, BlinkMacSystemFont, "Arial"`;
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#fff';
+            if (text.includes('\n')) {
+                const lines = text.split('\n');
+                ctx.fillText(lines[0], width/2, height/2 - fontSize*0.6);
+                ctx.fillText(lines[1], width/2, height/2 + fontSize*0.6);
+            } else { ctx.fillText(text, width/2, height/2); }
+            const data = ctx.getImageData(0, 0, width, height).data;
+            const validPoints = [];
+            const step = 2; 
+            for(let y=0; y<height; y+=step) {
+                for(let x=0; x<width; x+=step) {
+                    if(data[(y*width+x)*4] > 128) validPoints.push({ x: (x - width/2) * 0.5, y: -(y - height/2) * 0.5 });
                 }
             }
-            if(isExploding) geometry.attributes.color.needsUpdate = true;
+            textPixelCount = validPoints.length;
+            for(let i=0; i<CONFIG.particleCount; i++) {
+                const extras = particleExtras[i];
+                if(i < textPixelCount) {
+                    extras.isFirework = false;
+                    targetPositions[i] = { x: validPoints[i].x, y: validPoints[i].y, z: 0 };
+                } else {
+                    extras.isFirework = true;
+                    if(!CONFIG.isNewYear) {
+                        targetPositions[i] = { x: (Math.random()-0.5)*CONFIG.scatterRadius, y: (Math.random()-0.5)*CONFIG.scatterRadius*0.6, z: (Math.random()-0.5)*40 };
+                    }
+                }
+            }
         }
 
-        // --- 3. 动画循环 ---
         function animate() {
             requestAnimationFrame(animate);
-
+            time += 0.015;
             const positions = geometry.attributes.position.array;
+            const colors = geometry.attributes.color.array;
+            const sizes = geometry.attributes.size.array;
+            const cTech = new THREE.Color(CONFIG.colorTech);
+            const cGold = new THREE.Color(CONFIG.colorGold);
+            const cRed = new THREE.Color(CONFIG.colorRed);
 
-            if (isExploding) {
-                // 爆炸物理模拟
-                for (let i = 0; i < config.particleCount; i++) {
-                    // 更新位置
-                    positions[i * 3] += velocities[i].x;
-                    positions[i * 3 + 1] += velocities[i].y;
-                    positions[i * 3 + 2] += velocities[i].z;
-
-                    // 重力
-                    velocities[i].y -= 0.01;
-                    
-                    // 阻力
-                    velocities[i].x *= 0.98;
-                    velocities[i].y *= 0.98;
-                    velocities[i].z *= 0.98;
-                }
-            } else {
-                // 文字变形 (Morphing)
-                for (let i = 0; i < config.particleCount; i++) {
+            for(let i=0; i<CONFIG.particleCount; i++) {
+                const idx = i*3;
+                const extras = particleExtras[i];
+                const current = currentPositions[i];
+                
+                if (!extras.isFirework) {
                     const target = targetPositions[i];
-                    if(!target) continue;
+                    let breathing = CONFIG.isNewYear ? Math.sin(time * 2 + current.x * 0.1) * 0.5 : 0;
+                    let dx = mouse.x - current.x, dy = mouse.y - current.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    let forceX = 0, forceY = 0;
+                    if(dist < 30) {
+                        const force = (30 - dist) / 30;
+                        forceX = -dx * force * 0.5; forceY = -dy * force * 0.5;
+                    }
+                    const tx = target.x + forceX, ty = target.y + forceY + breathing, tz = target.z;
+                    velocities[i].x += (tx - current.x) * CONFIG.smoothness;
+                    velocities[i].y += (ty - current.y) * CONFIG.smoothness;
+                    velocities[i].z += (tz - current.z) * CONFIG.smoothness;
+                    velocities[i].x *= 0.85; velocities[i].y *= 0.85; velocities[i].z *= 0.85;
+                    current.x += velocities[i].x; current.y += velocities[i].y; current.z += velocities[i].z;
 
-                    const px = positions[i * 3];
-                    const py = positions[i * 3 + 1];
-                    const pz = positions[i * 3 + 2];
-
-                    // 添加噪点，让粒子不是死板的静止
-                    const noiseX = (Math.random() - 0.5) * config.spread;
-                    const noiseY = (Math.random() - 0.5) * config.spread;
-                    const noiseZ = (Math.random() - 0.5) * config.spread;
-
-                    // Lerp 插值
-                    positions[i * 3] += (target.x + noiseX - px) * config.lerpSpeed;
-                    positions[i * 3 + 1] += (target.y + noiseY - py) * config.lerpSpeed;
-                    positions[i * 3 + 2] += (target.z + noiseZ - pz) * config.lerpSpeed;
+                    let targetColor = CONFIG.isNewYear ? cGold : cTech;
+                    const brightnessBoost = 3.0; 
+                    colors[idx] += (targetColor.r * brightnessBoost - colors[idx]) * 0.1;
+                    colors[idx+1] += (targetColor.g * brightnessBoost - colors[idx+1]) * 0.1;
+                    colors[idx+2] += (targetColor.b * brightnessBoost - colors[idx+2]) * 0.1;
+                    
+                    sizes[i] = extras.baseSize * (1.0 + Math.sin(time * 3 + i * 0.1) * 0.2);
+                } else {
+                    if (CONFIG.isNewYear) {
+                        if (extras.life <= 0) {
+                            extras.life = 1.5 + Math.random();
+                            current.x = (Math.random()-0.5) * 120;
+                            current.y = (Math.random()-0.5) * 80;
+                            current.z = (Math.random()-0.5) * 50;
+                            const theta = Math.random() * Math.PI * 2, phi = Math.random() * Math.PI, speed = 0.15 + Math.random() * 0.6;
+                            extras.vx = speed * Math.sin(phi) * Math.cos(theta);
+                            extras.vy = speed * Math.sin(phi) * Math.sin(theta);
+                            extras.vz = speed * Math.cos(phi);
+                            const isGold = Math.random() > 0.3;
+                            const fc = isGold ? cGold : cRed;
+                            colors[idx] = fc.r; colors[idx+1] = fc.g; colors[idx+2] = fc.b;
+                        }
+                        current.x += extras.vx; current.y += extras.vy; current.z += extras.vz;
+                        extras.vy -= 0.01; extras.vx *= 0.99; extras.vy *= 0.99; extras.vz *= 0.99;
+                        extras.life -= 0.015;
+                        
+                        const fwDim = 0.05;
+                        if(extras.life < 0.4) {
+                            colors[idx] *= 0.92; colors[idx+1] *= 0.92; colors[idx+2] *= 0.92;
+                        } else {
+                            colors[idx] = (colors[idx] > cGold.r * fwDim) ? colors[idx] * 0.95 : cGold.r * fwDim;
+                            colors[idx+1] = (colors[idx+1] > cGold.g * fwDim) ? colors[idx+1] * 0.95 : cGold.g * fwDim;
+                            colors[idx+2] = (colors[idx+2] > cGold.b * fwDim) ? colors[idx+2] * 0.95 : cGold.b * fwDim;
+                        }
+                        sizes[i] = extras.baseSize * 0.8;
+                    } else {
+                        const target = targetPositions[i];
+                        current.x += (target.x - current.x) * 0.01;
+                        current.y += (target.y - current.y) * 0.01;
+                        current.z += (target.z - current.z) * 0.01;
+                        current.y += Math.sin(time * 0.3 + i) * 0.02;
+                        
+                        const dimFactor = 0.05; 
+                        colors[idx] += (cTech.r * dimFactor - colors[idx]) * 0.05;
+                        colors[idx+1] += (cTech.g * dimFactor - colors[idx+1]) * 0.05;
+                        colors[idx+2] += (cTech.b * dimFactor - colors[idx+2]) * 0.05;
+                        sizes[i] = extras.baseSize * 0.6;
+                    }
                 }
+                positions[idx] = current.x; positions[idx+1] = current.y; positions[idx+2] = current.z;
             }
-
             geometry.attributes.position.needsUpdate = true;
-            
-            // 缓慢旋转整个粒子群
-            if(!isExploding) {
-                particles.rotation.y += 0.002;
-                particles.rotation.x = Math.sin(Date.now() * 0.001) * 0.1;
-            }
-
+            geometry.attributes.color.needsUpdate = true;
+            geometry.attributes.size.needsUpdate = true;
             renderer.render(scene, camera);
-            
-            // Update FPS
-            document.getElementById('fps-counter').innerText = Math.round(1000 / (performance.now() - lastTime));
-            lastTime = performance.now();
         }
-        let lastTime = 0;
 
-        function onWindowResize() {
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 200 - 100;
+            mouse.y = -(event.clientY / window.innerHeight) * 100 + 50;
+        }
+
+        function onResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
-        // --- 4. MediaPipe 手势识别 ---
-        function initMediaPipe() {
-            const videoElement = document.getElementsByClassName('input_video')[0];
-
-            function onResults(results) {
-                // 隐藏 Loader
-                document.getElementById('loader').style.opacity = 0;
-                setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
-
-                if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-                    const landmarks = results.multiHandLandmarks[0];
-                    detectGesture(landmarks);
-                } else {
-                    // 没有手的时候，保持当前状态或复位
-                    // state.gesture = "None";
-                }
-            }
-
-            // 动态加载 MediaPipe Hands (通过 CDN 引入的全局对象)
-            // 注意：在实际生产中建议使用 npm imports，这里为了单文件使用了全局变量
-            const hands = new window.Hands({locateFile: (file) => {
-                return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-            }});
-
-            hands.setOptions({
-                maxNumHands: 1,
-                modelComplexity: 1,
-                minDetectionConfidence: 0.7,
-                minTrackingConfidence: 0.7
-            });
-
-            hands.onResults(onResults);
-
-            const cameraUtils = new window.Camera(videoElement, {
-                onFrame: async () => {
-                    await hands.send({image: videoElement});
-                },
-                width: 640,
-                height: 480
-            });
-            cameraUtils.start();
-        }
-
-        // 手势判断逻辑
-        function detectGesture(landmarks) {
-            // 简单的手指计数与形状判断
-            const thumbTip = landmarks[4];
-            const thumbIp = landmarks[3];
-            const indexTip = landmarks[8];
-            const indexPip = landmarks[6];
-            const middleTip = landmarks[12];
-            const middlePip = landmarks[10];
-            const ringTip = landmarks[16];
-            const ringPip = landmarks[14];
-            const pinkyTip = landmarks[20];
-            const pinkyPip = landmarks[18];
-
-            // 判断手指伸展 (y 坐标越小越靠上)
-            const isIndexOpen = indexTip.y < indexPip.y;
-            const isMiddleOpen = middleTip.y < middlePip.y;
-            const isRingOpen = ringTip.y < ringPip.y;
-            const isPinkyOpen = pinkyTip.y < pinkyPip.y;
-            
-            // 拇指判断 (根据x轴相对位置，针对左右手可能不同，这里简化为相对掌心)
-            // 简化：拇指 Tip x 距离 Pinky Base 较远则为张开
-            const isThumbOpen = Math.abs(thumbTip.x - landmarks[17].x) > 0.2; 
-
-            let count = 0;
-            if (isIndexOpen) count++;
-            if (isMiddleOpen) count++;
-            if (isRingOpen) count++;
-            if (isPinkyOpen) count++;
-            if (isThumbOpen) count++;
-
-            let newGesture = "";
-            let displayText = "";
-            let triggerExplosion = false;
-
-            // 逻辑映射
-            if (count === 5) {
-                newGesture = "Open Palm";
-                displayText = "5";
-            } else if (count === 4) {
-                newGesture = "Four";
-                displayText = "4";
-            } else if (count === 3) {
-                newGesture = "Three";
-                displayText = "3";
-            } else if (count === 2) {
-                newGesture = "Two";
-                displayText = "2";
-            } else if (count === 1 && isIndexOpen) {
-                newGesture = "One";
-                displayText = "1";
-            } else if (count === 0) {
-                // 握拳
-                newGesture = "Fist";
-                displayText = "新年好";
-                triggerExplosion = true;
-            } else if (count === 1 && isThumbOpen && !isIndexOpen) {
-                // 点赞 (只有拇指)
-                newGesture = "Thumbs Up";
-                displayText = "READY\n2026";
-            } else {
-                // 其它过渡状态，保持上一个有效状态或忽略
-                return;
-            }
-
-            // 更新 UI 和 3D 状态
-            if (state.gesture !== newGesture) {
-                state.gesture = newGesture;
-                document.getElementById('current-gesture').innerText = newGesture;
-                
-                // 触发 3D 变化
-                loadFontAndGenerateText(displayText, triggerExplosion);
-            }
-        }
-
-        // --- 5. UI 与 控制 ---
         function initGUI() {
-            const gui = new GUI({ title: 'Settings' });
-            
-            gui.add(config, 'particleSize', 0.05, 0.5).name('Particle Size').onChange(v => {
-                 particles.material.uniforms.baseSize.value = v * 200;
-            });
-            
-            gui.addColor(config, 'particleColor').name('Color').onChange(v => {
-                if(!isExploding) {
-                    const c = new THREE.Color(v);
-                    const colors = geometry.attributes.color.array;
-                    for(let i=0; i<config.particleCount; i++) {
-                        colors[i*3] = c.r;
-                        colors[i*3+1] = c.g;
-                        colors[i*3+2] = c.b;
-                    }
-                    geometry.attributes.color.needsUpdate = true;
-                }
-            });
-
-            gui.add(config, 'lerpSpeed', 0.01, 0.2).name('Morph Speed');
-            gui.add(config, 'spread', 0, 0.5).name('Noise Amount');
-
-            // UI 显隐逻辑
-            const toggleBtn = document.getElementById('toggle-ui-btn');
-            const statusBar = document.getElementById('status-bar');
-            
-            let uiVisible = true;
-            toggleBtn.addEventListener('click', () => {
-                uiVisible = !uiVisible;
-                if(uiVisible) {
-                    statusBar.classList.remove('hidden');
-                    gui.domElement.classList.remove('hidden-gui');
-                } else {
-                    statusBar.classList.add('hidden');
-                    gui.domElement.classList.add('hidden-gui');
-                }
-            });
+            const gui = new GUI({ title: '参数微调' });
+            gui.domElement.classList.add('ui-element'); gui.domElement.style.top = '80px'; 
+            const f1 = gui.addFolder('外观');
+            f1.add(CONFIG, 'baseSize', 0.5, 5.0).name('粒子基准大小').onChange(v => material.size = v);
+            f1.add(material, 'opacity', 0.1, 1.0).name('全局透明度上限');
+            const f2 = gui.addFolder('物理');
+            f2.add(CONFIG, 'smoothness', 0.01, 0.3).name('跟随响应速度');
+            const f3 = gui.addFolder('颜色');
+            f3.addColor(CONFIG, 'colorTech').name('默认科技色');
+            f3.addColor(CONFIG, 'colorGold').name('新年主题色');
         }
 
-        // --- 启动 ---
-        initThree();
-        initGUI();
-        initMediaPipe(); // 这会请求摄像头
-        animate();
+        function initComputerVision() {
+            const videoElement = document.getElementById('input-video');
+            const gestureDisplay = document.getElementById('current-gesture');
+            const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+            hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6, minTrackingConfidence: 0.5 });
+            
+            hands.onResults(results => {
+                // [修改逻辑] 如果没有检测到手部，恢复 HELLO 2026
+                if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+                    gestureDisplay.innerText = "等待输入...";
+                    gestureDisplay.style.background = "linear-gradient(135deg, #fff, #a5a5a5)";
+                    gestureDisplay.style.webkitBackgroundClip = "text";
+                    updateText("HELLO\n2026");
+                    return;
+                }
 
+                const landmarks = results.multiHandLandmarks[0];
+                const gesture = analyzeGesture(landmarks);
+                gestureDisplay.innerText = gesture.name;
+                if (gesture.isNewYear) {
+                    gestureDisplay.style.background = "linear-gradient(135deg, #ffd700, #ffaa00)";
+                    gestureDisplay.style.webkitBackgroundClip = "text";
+                } else {
+                    gestureDisplay.style.background = "linear-gradient(135deg, #fff, #a5a5a5)";
+                    gestureDisplay.style.webkitBackgroundClip = "text";
+                }
+                updateText(gesture.text);
+            });
+            const cameraUtils = new Camera(videoElement, { onFrame: async () => await hands.send({image: videoElement}), width: 320, height: 240 });
+            cameraUtils.start().then(() => document.getElementById('loading').style.display = 'none').catch(e => console.error(e));
+        }
+
+        function analyzeGesture(landmarks) {
+            const fingers = [8, 12, 16, 20], pips = [6, 10, 14, 18], wrist = landmarks[0];
+            let extendedCount = 0;
+            for (let i = 0; i < 4; i++) { if (dist(landmarks[fingers[i]], wrist) > dist(landmarks[pips[i]], wrist) + 0.03) extendedCount++; }
+            const thumbTip = landmarks[4], pinkyMcp = landmarks[17], thumbMcp = landmarks[2];
+            let thumbExtended = dist(thumbTip, pinkyMcp) > dist(thumbMcp, pinkyMcp) + 0.03;
+            const count = extendedCount + (thumbExtended ? 1 : 0);
+            if (thumbExtended && extendedCount === 0) return { name: "点赞", text: "READY\n2026", isNewYear: false };
+            if (count === 0) return { name: "新年快乐", text: "新年快乐", isNewYear: true };
+            if (count === 5) return { name: "倒计时: 5", text: "5", isNewYear: false };
+            if (count === 4) return { name: "倒计时: 4", text: "4", isNewYear: false };
+            if (count === 3) return { name: "倒计时: 3", text: "3", isNewYear: false };
+            if (count === 2) return { name: "倒计时: 2", text: "2", isNewYear: false };
+            if (count === 1) return { name: "倒计时: 1", text: "1", isNewYear: false };
+            return { name: "检测中...", text: "...", isNewYear: false };
+        }
+
+        function dist(p1, p2) { return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2)); }
+
+        init();
+        initComputerVision();
     </script>
-</body>
-</html>
+</body></html>
