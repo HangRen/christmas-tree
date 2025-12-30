@@ -1,4 +1,10 @@
-<!DOCTYPE html><html lang="zh"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta name="x-poe-datastore-behavior" content="local_only">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apple Style Particle System 2026</title>
@@ -12,16 +18,21 @@
             --ease-apple: cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        body { 
-            margin: 0; 
-            overflow: hidden; 
-            background-color: #000000; 
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000000;
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
             user-select: none;
         }
 
-        #canvas-container { width: 100vw; height: 100vh; position: absolute; z-index: 1; }
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            z-index: 1;
+        }
 
         .ui-element {
             transition: opacity 0.6s var(--ease-apple), transform 0.6s var(--ease-apple);
@@ -34,7 +45,7 @@
             transform: translateY(-20px);
             pointer-events: none;
         }
-        
+
         body.ui-hidden .lil-gui {
             opacity: 0 !important;
             pointer-events: none !important;
@@ -58,7 +69,7 @@
             max-height: 80px;
             max-width: 240px;
             object-fit: contain;
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
             display: none;
             opacity: 0;
             transition: opacity 1s ease;
@@ -83,8 +94,17 @@
             z-index: 100;
             transition: all 0.3s ease;
         }
-        #toggle-ui-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.05); }
-        #toggle-ui-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+        #toggle-ui-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        #toggle-ui-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
 
         #status-panel {
             position: absolute;
@@ -97,12 +117,24 @@
             border: 1px solid var(--glass-border);
             border-radius: 24px;
             width: 280px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             z-index: 10;
         }
 
-        h1 { margin: 0 0 8px 0; font-size: 20px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.5px; }
-        p { margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
 
         #current-gesture {
             display: inline-block;
@@ -110,6 +142,7 @@
             font-size: 24px;
             font-weight: 700;
             background: linear-gradient(135deg, #fff, #a5a5a5);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -118,15 +151,25 @@
         .upload-section {
             margin-top: 20px;
             padding: 12px;
-            border: 1px dashed rgba(255,255,255,0.2);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             text-align: center;
             cursor: pointer;
             transition: background 0.3s;
         }
-        .upload-section:hover { background: rgba(255,255,255,0.05); }
-        .upload-section p { font-size: 11px; color: var(--accent-gold); }
-        #logo-input { display: none; }
+
+        .upload-section:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .upload-section p {
+            font-size: 11px;
+            color: var(--accent-gold);
+        }
+
+        #logo-input {
+            display: none;
+        }
 
         #video-wrapper {
             position: absolute;
@@ -138,21 +181,27 @@
             overflow: hidden;
             background: #111;
             border: 1px solid var(--glass-border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             z-index: 10;
             transform: scaleX(-1);
             transition: opacity 0.6s var(--ease-apple), transform 0.6s var(--ease-apple);
         }
-        
+
         body.ui-hidden #video-wrapper {
             transform: scaleX(-1) translateY(20px);
         }
 
-        #input-video { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        #input-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+        }
 
         #loading {
             position: absolute;
-            top: 50%; left: 50%;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
             z-index: 20;
             text-align: center;
@@ -161,18 +210,67 @@
             font-weight: 500;
             pointer-events: none;
         }
+
         .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 16px auto;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Mobile Adaptation */
+        @media (max-width: 768px) {
+            #status-panel {
+                top: auto;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                max-width: 320px;
+                padding: 16px;
+                border-radius: 20px;
+            }
+
+            #status-panel h1 {
+                font-size: 18px;
+            }
+
+            #toggle-ui-btn {
+                top: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+            }
+
+            #video-wrapper {
+                bottom: auto;
+                top: 20px;
+                right: auto;
+                left: 20px;
+                width: 120px;
+                height: 90px;
+                border-radius: 16px;
+            }
+
+            #logo-display-container {
+                top: 80px;
+            }
+
+            #user-logo {
+                max-height: 60px;
+            }
+        }
     </style>
-    
+
     <script type="importmap">
         {
             "imports": {
@@ -183,9 +281,11 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
 
     <div id="loading">
@@ -200,7 +300,9 @@
 
     <div id="toggle-ui-btn" title="切换UI (按H键)">
         <svg viewBox="0 0 24 24">
-            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path>
+            <path
+                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z">
+            </path>
         </svg>
     </div>
 
@@ -238,11 +340,11 @@
         const userLogoImg = document.getElementById('user-logo');
         let isUiVisible = true;
 
-        logoInput.addEventListener('change', function(e) {
+        logoInput.addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = function (event) {
                     userLogoImg.src = event.target.result;
                     userLogoImg.style.display = 'block';
                     setTimeout(() => userLogoImg.style.opacity = '1', 100);
@@ -264,28 +366,47 @@
 
         toggleBtn.addEventListener('click', toggleUI);
         window.addEventListener('keydown', (e) => {
-            if(e.key.toLowerCase() === 'h') toggleUI();
+            if (e.key.toLowerCase() === 'h') toggleUI();
         });
 
         // --- Particle Logic ---
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        }
+
         const CONFIG = {
-            particleCount: 20000,
-            baseSize: 2.0,
+            particleCount: isMobile() ? 7000 : 20000,
+            baseSize: isMobile() ? 2.5 : 2.0,
             sizeVariation: 1.8,
-            smoothness: 0.08,
+            smoothness: 0.20, // Increased for snappier movement
+            damping: 0.70,    // Added damping
             scatterRadius: 150,
             colorTech: '#e0e5ff',
             colorGold: '#ffcc00',
             colorRed: '#ff3333',
-            isNewYear: false
+            isNewYear: false,
+            logoScale: 1.0,
+            bounceStrength: 0.2
         };
 
         let scene, camera, renderer, particles;
         let geometry, material;
-        let targetPositions = [];
-        let currentPositions = [];
-        let velocities = [];
-        let particleExtras = [];
+
+        // Flattened Data Structures (Structure of Arrays)
+        // Pointers to TypedArrays
+        let currentPos; // Float32Array [x, y, z, x, y, z...]
+        let targetPos;  // Float32Array [x, y, z...]
+        let velocities; // Float32Array [vx, vy, vz...]
+
+        // Extras
+        let extrasLife; // Float32Array
+        let extrasMaxLife; // Float32Array
+        let extrasIsFirework; // Int8Array (0 or 1)
+        let extrasBaseSize; // Float32Array
+        let extrasVx; // Float32Array
+        let extrasVy; // Float32Array
+        let extrasVz; // Float32Array
+
         let textPixelCount = 0;
         let lastText = "";
         let time = 0;
@@ -296,47 +417,96 @@
             scene = new THREE.Scene();
             scene.fog = new THREE.FogExp2(0x000000, 0.008);
             camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 0, 60);
+            camera.position.set(0, 0, isMobile() ? 80 : 60); // Zoom out a bit on mobile
+
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
+
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
             controls.autoRotate = true;
             controls.autoRotateSpeed = 0.2;
             controls.enableZoom = false;
+
             createParticles();
-            initGUI();
+
+            if (!isMobile()) {
+                initGUI(); // Only show GUI on desktop by default or if needed
+            }
+
             updateText("HELLO\n2026");
+
             window.addEventListener('resize', onResize);
+
+            // Interaction
             document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('touchstart', onTouchMove, { passive: false });
+            document.addEventListener('touchmove', onTouchMove, { passive: false });
+            document.addEventListener('touchend', () => {
+                mouse.x = 9999;
+                mouse.y = 9999;
+            });
+
             animate();
         }
 
         function createParticles() {
             geometry = new THREE.BufferGeometry();
-            const posArray = new Float32Array(CONFIG.particleCount * 3);
+
+            // Initialize Arrays
+            currentPos = new Float32Array(CONFIG.particleCount * 3);
+            targetPos = new Float32Array(CONFIG.particleCount * 3);
+            velocities = new Float32Array(CONFIG.particleCount * 3);
+
+            extrasLife = new Float32Array(CONFIG.particleCount);
+            extrasMaxLife = new Float32Array(CONFIG.particleCount);
+            extrasIsFirework = new Int8Array(CONFIG.particleCount);
+            extrasBaseSize = new Float32Array(CONFIG.particleCount);
+            extrasVx = new Float32Array(CONFIG.particleCount);
+            extrasVy = new Float32Array(CONFIG.particleCount);
+            extrasVz = new Float32Array(CONFIG.particleCount);
+
             const colorArray = new Float32Array(CONFIG.particleCount * 3);
             const sizeArray = new Float32Array(CONFIG.particleCount);
             const techColor = new THREE.Color(CONFIG.colorTech);
+
             for (let i = 0; i < CONFIG.particleCount; i++) {
+                const i3 = i * 3;
+
                 const x = (Math.random() - 0.5) * CONFIG.scatterRadius * 2;
                 const y = (Math.random() - 0.5) * CONFIG.scatterRadius * 2;
                 const z = (Math.random() - 0.5) * CONFIG.scatterRadius;
-                posArray[i*3] = x; posArray[i*3+1] = y; posArray[i*3+2] = z;
-                currentPositions.push({x, y, z});
-                targetPositions.push({x, y, z});
-                velocities.push({x:0, y:0, z:0});
-                colorArray[i*3] = techColor.r; colorArray[i*3+1] = techColor.g; colorArray[i*3+2] = techColor.b;
+
+                currentPos[i3] = x;
+                currentPos[i3 + 1] = y;
+                currentPos[i3 + 2] = z;
+
+                targetPos[i3] = x;
+                targetPos[i3 + 1] = y;
+                targetPos[i3 + 2] = z;
+
+                velocities[i3] = 0;
+                velocities[i3 + 1] = 0;
+                velocities[i3 + 2] = 0;
+
+                colorArray[i3] = techColor.r;
+                colorArray[i3 + 1] = techColor.g;
+                colorArray[i3 + 2] = techColor.b;
+
                 const baseS = Math.random();
                 sizeArray[i] = baseS;
-                particleExtras.push({ baseSize: baseS, life: 0, maxLife: 0, isFirework: true, vx: 0, vy: 0, vz: 0 });
+                extrasBaseSize[i] = baseS;
+
+                extrasIsFirework[i] = 1; // Default to firework mode until text is set
             }
-            geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(currentPos, 3));
             geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
             geometry.setAttribute('size', new THREE.BufferAttribute(sizeArray, 1));
+
             material = new THREE.PointsMaterial({
                 size: CONFIG.baseSize,
                 map: createSoftGlowTexture(),
@@ -347,6 +517,7 @@
                 opacity: 0.95,
                 sizeAttenuation: true
             });
+
             particles = new THREE.Points(geometry, material);
             scene.add(particles);
         }
@@ -355,12 +526,12 @@
             const canvas = document.createElement('canvas');
             canvas.width = 128; canvas.height = 128;
             const ctx = canvas.getContext('2d');
-            const grad = ctx.createRadialGradient(64,64,0,64,64,64);
+            const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
             grad.addColorStop(0, 'rgba(255,255,255,1)');
             grad.addColorStop(0.15, 'rgba(255,255,255,0.9)');
             grad.addColorStop(0.4, 'rgba(255,255,255,0.2)');
             grad.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.fillStyle = grad; ctx.fillRect(0,0,128,128);
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, 128, 128);
             const tex = new THREE.Texture(canvas); tex.needsUpdate = true; return tex;
         }
 
@@ -368,40 +539,57 @@
             if (text === lastText) return;
             lastText = text;
             CONFIG.isNewYear = text.includes("NEW YEAR") || text.includes("新年快乐");
+
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             const width = 300, height = 150;
             canvas.width = width; canvas.height = height;
             ctx.fillStyle = '#000'; ctx.fillRect(0, 0, width, height);
+
             let fontSize;
-            if (text.includes("新年快乐")) fontSize = 45; 
+            if (text.includes("新年快乐")) fontSize = 45;
             else if (text.length > 5) fontSize = 40;
             else fontSize = 100;
+
             ctx.font = `900 ${fontSize}px -apple-system, BlinkMacSystemFont, "Arial"`;
             ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#fff';
+
             if (text.includes('\n')) {
                 const lines = text.split('\n');
-                ctx.fillText(lines[0], width/2, height/2 - fontSize*0.6);
-                ctx.fillText(lines[1], width/2, height/2 + fontSize*0.6);
-            } else { ctx.fillText(text, width/2, height/2); }
+                ctx.fillText(lines[0], width / 2, height / 2 - fontSize * 0.6);
+                ctx.fillText(lines[1], width / 2, height / 2 + fontSize * 0.6);
+            } else {
+                ctx.fillText(text, width / 2, height / 2);
+            }
+
             const data = ctx.getImageData(0, 0, width, height).data;
             const validPoints = [];
-            const step = 2; 
-            for(let y=0; y<height; y+=step) {
-                for(let x=0; x<width; x+=step) {
-                    if(data[(y*width+x)*4] > 128) validPoints.push({ x: (x - width/2) * 0.5, y: -(y - height/2) * 0.5 });
+            // Optimize sampling step based on device
+            const step = isMobile() ? 3 : 2;
+
+            for (let y = 0; y < height; y += step) {
+                for (let x = 0; x < width; x += step) {
+                    if (data[(y * width + x) * 4] > 128) {
+                        validPoints.push({ x: (x - width / 2) * 0.5, y: -(y - height / 2) * 0.5 });
+                    }
                 }
             }
+
             textPixelCount = validPoints.length;
-            for(let i=0; i<CONFIG.particleCount; i++) {
-                const extras = particleExtras[i];
-                if(i < textPixelCount) {
-                    extras.isFirework = false;
-                    targetPositions[i] = { x: validPoints[i].x, y: validPoints[i].y, z: 0 };
+
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                const i3 = i * 3;
+                if (i < textPixelCount) {
+                    extrasIsFirework[i] = 0; // Text mode
+                    targetPos[i3] = validPoints[i].x;
+                    targetPos[i3 + 1] = validPoints[i].y;
+                    targetPos[i3 + 2] = 0;
                 } else {
-                    extras.isFirework = true;
-                    if(!CONFIG.isNewYear) {
-                        targetPositions[i] = { x: (Math.random()-0.5)*CONFIG.scatterRadius, y: (Math.random()-0.5)*CONFIG.scatterRadius*0.6, z: (Math.random()-0.5)*40 };
+                    extrasIsFirework[i] = 1; // Firework/Scatter mode
+                    if (!CONFIG.isNewYear) {
+                        targetPos[i3] = (Math.random() - 0.5) * CONFIG.scatterRadius;
+                        targetPos[i3 + 1] = (Math.random() - 0.5) * CONFIG.scatterRadius * 0.6;
+                        targetPos[i3 + 2] = (Math.random() - 0.5) * 40;
                     }
                 }
             }
@@ -410,95 +598,172 @@
         function animate() {
             requestAnimationFrame(animate);
             time += 0.015;
+
+            // Access buffer attributes directly
             const positions = geometry.attributes.position.array;
             const colors = geometry.attributes.color.array;
             const sizes = geometry.attributes.size.array;
+
             const cTech = new THREE.Color(CONFIG.colorTech);
             const cGold = new THREE.Color(CONFIG.colorGold);
             const cRed = new THREE.Color(CONFIG.colorRed);
 
-            for(let i=0; i<CONFIG.particleCount; i++) {
-                const idx = i*3;
-                const extras = particleExtras[i];
-                const current = currentPositions[i];
-                
-                if (!extras.isFirework) {
-                    const target = targetPositions[i];
-                    let breathing = CONFIG.isNewYear ? Math.sin(time * 2 + current.x * 0.1) * 0.5 : 0;
-                    let dx = mouse.x - current.x, dy = mouse.y - current.y;
-                    let dist = Math.sqrt(dx*dx + dy*dy);
-                    let forceX = 0, forceY = 0;
-                    if(dist < 30) {
-                        const force = (30 - dist) / 30;
-                        forceX = -dx * force * 0.5; forceY = -dy * force * 0.5;
-                    }
-                    const tx = target.x + forceX, ty = target.y + forceY + breathing, tz = target.z;
-                    velocities[i].x += (tx - current.x) * CONFIG.smoothness;
-                    velocities[i].y += (ty - current.y) * CONFIG.smoothness;
-                    velocities[i].z += (tz - current.z) * CONFIG.smoothness;
-                    velocities[i].x *= 0.85; velocities[i].y *= 0.85; velocities[i].z *= 0.85;
-                    current.x += velocities[i].x; current.y += velocities[i].y; current.z += velocities[i].z;
+            // Cache heavy math
+            const sinTime2 = Math.sin(time * 2);
+            const sinTime3 = Math.sin(time * 3);
 
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                const i3 = i * 3;
+
+                // Read current position from typed array (fast)
+                let cx = positions[i3];
+                let cy = positions[i3 + 1];
+                let cz = positions[i3 + 2];
+
+                if (extrasIsFirework[i] === 0) {
+                    // Text Mode logic
+                    const tx = targetPos[i3];
+                    const ty = targetPos[i3 + 1];
+                    const tz = targetPos[i3 + 2];
+
+                    let breathing = CONFIG.isNewYear ? sinTime2 * 0.5 : 0; // Simplified breathing
+                    // Note: original code had spatial breathing (Math.sin(time * 2 + cx * 0.1)), removed for perf or can add back cheaply
+                    if (CONFIG.isNewYear) breathing = Math.sin(time * 2 + cx * 0.1) * CONFIG.bounceStrength;
+
+                    let dx = mouse.x - cx;
+                    let dy = mouse.y - cy;
+                    let distSq = dx * dx + dy * dy; // Avoid sqrt if possible
+
+                    let forceX = 0, forceY = 0;
+                    if (distSq < 900) { // 30 * 30
+                        const dist = Math.sqrt(distSq);
+                        const force = (30 - dist) / 30;
+                        forceX = -dx * force * 0.5;
+                        forceY = -dy * force * 0.5;
+                    }
+
+                    const destX = tx + forceX;
+                    const destY = ty + forceY + breathing;
+                    const destZ = tz;
+
+                    // Velocity Verlet integration for smoothness
+                    velocities[i3] += (destX - cx) * CONFIG.smoothness;
+                    velocities[i3 + 1] += (destY - cy) * CONFIG.smoothness;
+                    velocities[i3 + 2] += (destZ - cz) * CONFIG.smoothness;
+
+                    velocities[i3] *= CONFIG.damping;
+                    velocities[i3 + 1] *= CONFIG.damping;
+                    velocities[i3 + 2] *= CONFIG.damping;
+
+                    cx += velocities[i3];
+                    cy += velocities[i3 + 1];
+                    cz += velocities[i3 + 2];
+
+                    // Color Logic
                     let targetColor = CONFIG.isNewYear ? cGold : cTech;
-                    const brightnessBoost = 3.0; 
-                    colors[idx] += (targetColor.r * brightnessBoost - colors[idx]) * 0.1;
-                    colors[idx+1] += (targetColor.g * brightnessBoost - colors[idx+1]) * 0.1;
-                    colors[idx+2] += (targetColor.b * brightnessBoost - colors[idx+2]) * 0.1;
-                    
-                    sizes[i] = extras.baseSize * (1.0 + Math.sin(time * 3 + i * 0.1) * 0.2);
+                    const brightnessBoost = 3.0;
+
+                    // Fast lerp
+                    colors[i3] += (targetColor.r * brightnessBoost - colors[i3]) * 0.1;
+                    colors[i3 + 1] += (targetColor.g * brightnessBoost - colors[i3 + 1]) * 0.1;
+                    colors[i3 + 2] += (targetColor.b * brightnessBoost - colors[i3 + 2]) * 0.1;
+
+                    sizes[i] = extrasBaseSize[i] * (1.0 + Math.sin(time * 3 + i * 0.1) * 0.2);
+
                 } else {
+                    // Firework / Scatter Mode
                     if (CONFIG.isNewYear) {
-                        if (extras.life <= 0) {
-                            extras.life = 1.5 + Math.random();
-                            current.x = (Math.random()-0.5) * 120;
-                            current.y = (Math.random()-0.5) * 80;
-                            current.z = (Math.random()-0.5) * 50;
-                            const theta = Math.random() * Math.PI * 2, phi = Math.random() * Math.PI, speed = 0.15 + Math.random() * 0.6;
-                            extras.vx = speed * Math.sin(phi) * Math.cos(theta);
-                            extras.vy = speed * Math.sin(phi) * Math.sin(theta);
-                            extras.vz = speed * Math.cos(phi);
+                        // Firework logic
+                        if (extrasLife[i] <= 0) {
+                            // Reset particle as new explosion
+                            extrasLife[i] = 1.5 + Math.random();
+                            cx = (Math.random() - 0.5) * 120;
+                            cy = (Math.random() - 0.5) * 80;
+                            cz = (Math.random() - 0.5) * 50;
+
+                            const theta = Math.random() * Math.PI * 2;
+                            const phi = Math.random() * Math.PI;
+                            const speed = 0.15 + Math.random() * 0.6;
+
+                            extrasVx[i] = speed * Math.sin(phi) * Math.cos(theta);
+                            extrasVy[i] = speed * Math.sin(phi) * Math.sin(theta);
+                            extrasVz[i] = speed * Math.cos(phi);
+
                             const isGold = Math.random() > 0.3;
                             const fc = isGold ? cGold : cRed;
-                            colors[idx] = fc.r; colors[idx+1] = fc.g; colors[idx+2] = fc.b;
+                            colors[i3] = fc.r; colors[i3 + 1] = fc.g; colors[i3 + 2] = fc.b;
                         }
-                        current.x += extras.vx; current.y += extras.vy; current.z += extras.vz;
-                        extras.vy -= 0.01; extras.vx *= 0.99; extras.vy *= 0.99; extras.vz *= 0.99;
-                        extras.life -= 0.015;
-                        
+
+                        cx += extrasVx[i];
+                        cy += extrasVy[i];
+                        cz += extrasVz[i];
+
+                        extrasVy[i] -= 0.01; // Gravity
+                        extrasVx[i] *= 0.99;
+                        extrasVy[i] *= 0.99;
+                        extrasVz[i] *= 0.99;
+
+                        extrasLife[i] -= 0.015;
+
                         const fwDim = 0.05;
-                        if(extras.life < 0.4) {
-                            colors[idx] *= 0.92; colors[idx+1] *= 0.92; colors[idx+2] *= 0.92;
+                        if (extrasLife[i] < 0.4) {
+                            colors[i3] *= 0.92; colors[i3 + 1] *= 0.92; colors[i3 + 2] *= 0.92;
                         } else {
-                            colors[idx] = (colors[idx] > cGold.r * fwDim) ? colors[idx] * 0.95 : cGold.r * fwDim;
-                            colors[idx+1] = (colors[idx+1] > cGold.g * fwDim) ? colors[idx+1] * 0.95 : cGold.g * fwDim;
-                            colors[idx+2] = (colors[idx+2] > cGold.b * fwDim) ? colors[idx+2] * 0.95 : cGold.b * fwDim;
+                            // Flash / Twinkle
+                            colors[i3] = (colors[i3] > cGold.r * fwDim) ? colors[i3] * 0.95 : cGold.r * fwDim;
+                            colors[i3 + 1] = (colors[i3 + 1] > cGold.g * fwDim) ? colors[i3 + 1] * 0.95 : cGold.g * fwDim;
+                            colors[i3 + 2] = (colors[i3 + 2] > cGold.b * fwDim) ? colors[i3 + 2] * 0.95 : cGold.b * fwDim;
                         }
-                        sizes[i] = extras.baseSize * 0.8;
+                        sizes[i] = extrasBaseSize[i] * 0.8;
+
                     } else {
-                        const target = targetPositions[i];
-                        current.x += (target.x - current.x) * 0.01;
-                        current.y += (target.y - current.y) * 0.01;
-                        current.z += (target.z - current.z) * 0.01;
-                        current.y += Math.sin(time * 0.3 + i) * 0.02;
-                        
-                        const dimFactor = 0.05; 
-                        colors[idx] += (cTech.r * dimFactor - colors[idx]) * 0.05;
-                        colors[idx+1] += (cTech.g * dimFactor - colors[idx+1]) * 0.05;
-                        colors[idx+2] += (cTech.b * dimFactor - colors[idx+2]) * 0.05;
-                        sizes[i] = extras.baseSize * 0.6;
+                        // Background scatter (waiting for text)
+                        const tx = targetPos[i3];
+                        const ty = targetPos[i3 + 1];
+                        const tz = targetPos[i3 + 2];
+
+                        cx += (tx - cx) * 0.01;
+                        cy += (ty - cy) * 0.01;
+                        cz += (tz - cz) * 0.01;
+
+                        cy += Math.sin(time * 0.3 + i) * 0.02; // Floating effect
+
+                        const dimFactor = 0.05;
+                        colors[i3] += (cTech.r * dimFactor - colors[i3]) * 0.05;
+                        colors[i3 + 1] += (cTech.g * dimFactor - colors[i3 + 1]) * 0.05;
+                        colors[i3 + 2] += (cTech.b * dimFactor - colors[i3 + 2]) * 0.05;
+
+                        sizes[i] = extrasBaseSize[i] * 0.6;
                     }
                 }
-                positions[idx] = current.x; positions[idx+1] = current.y; positions[idx+2] = current.z;
+
+                // Write back updates
+                positions[i3] = cx;
+                positions[i3 + 1] = cy;
+                positions[i3 + 2] = cz;
             }
+
             geometry.attributes.position.needsUpdate = true;
             geometry.attributes.color.needsUpdate = true;
             geometry.attributes.size.needsUpdate = true;
+
             renderer.render(scene, camera);
         }
 
         function onMouseMove(event) {
             mouse.x = (event.clientX / window.innerWidth) * 200 - 100;
             mouse.y = -(event.clientY / window.innerHeight) * 100 + 50;
+        }
+
+        function onTouchMove(event) {
+            // Prevent scrolling
+            if (event.type === 'touchmove') event.preventDefault();
+
+            if (event.touches.length > 0) {
+                const touch = event.touches[0];
+                mouse.x = (touch.clientX / window.innerWidth) * 200 - 100;
+                mouse.y = -(touch.clientY / window.innerHeight) * 100 + 50;
+            }
         }
 
         function onResize() {
@@ -509,23 +774,41 @@
 
         function initGUI() {
             const gui = new GUI({ title: '参数微调' });
-            gui.domElement.classList.add('ui-element'); gui.domElement.style.top = '80px'; 
+            gui.domElement.classList.add('ui-element'); gui.domElement.style.top = '80px';
             const f1 = gui.addFolder('外观');
             f1.add(CONFIG, 'baseSize', 0.5, 5.0).name('粒子基准大小').onChange(v => material.size = v);
             f1.add(material, 'opacity', 0.1, 1.0).name('全局透明度上限');
+
+            // Logo Scale Slider
+            f1.add(CONFIG, 'logoScale', 0.1, 2.0).name('Logo 大小').onChange(v => {
+                const logo = document.getElementById('user-logo');
+                if (logo) logo.style.transform = `scale(${v})`;
+            });
+
             const f2 = gui.addFolder('物理');
-            f2.add(CONFIG, 'smoothness', 0.01, 0.3).name('跟随响应速度');
+            f2.add(CONFIG, 'smoothness', 0.01, 0.40).name('聚集速度 (硬度)');
+            f2.add(CONFIG, 'damping', 0.50, 0.99).name('阻尼 (惯性抑制)');
+            f2.add(CONFIG, 'bounceStrength', 0.0, 2.0).name('文字呼吸幅度');
+
             const f3 = gui.addFolder('颜色');
             f3.addColor(CONFIG, 'colorTech').name('默认科技色');
             f3.addColor(CONFIG, 'colorGold').name('新年主题色');
         }
 
         function initComputerVision() {
+            // Mobile check before loading heavy CV models
+            if (isMobile()) {
+                const gestureDisplay = document.getElementById('current-gesture');
+                gestureDisplay.innerText = "手机模式(触摸互动)";
+                document.getElementById('loading').style.display = 'none';
+                return; // Skip CV on mobile
+            }
+
             const videoElement = document.getElementById('input-video');
             const gestureDisplay = document.getElementById('current-gesture');
-            const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+            const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
             hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6, minTrackingConfidence: 0.5 });
-            
+
             hands.onResults(results => {
                 if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
                     gestureDisplay.innerText = "等待输入...";
@@ -547,7 +830,7 @@
                 }
                 updateText(gesture.text);
             });
-            const cameraUtils = new Camera(videoElement, { onFrame: async () => await hands.send({image: videoElement}), width: 320, height: 240 });
+            const cameraUtils = new Camera(videoElement, { onFrame: async () => await hands.send({ image: videoElement }), width: 320, height: 240 });
             cameraUtils.start().then(() => document.getElementById('loading').style.display = 'none').catch(e => console.error(e));
         }
 
@@ -573,4 +856,6 @@
         init();
         initComputerVision();
     </script>
-</body></html>
+</body>
+
+</html>
